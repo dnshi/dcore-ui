@@ -1,0 +1,130 @@
+:root {
+  --default-background-color: color(white blackness(10%));
+  --default-font-color: darkslategrey;
+
+  --primary-color: dodgerblue;
+  --secondary-color: #4f5356;
+
+  --success-color: limegreen;
+  --warning-color: #ffb330;
+  --info-color: deepskyblue;
+  --error-color: #e53935;
+
+  --global-font: #2c3e50;
+}
+
+@custom-selector :--element-states :hover, :focus, :active, :visited;
+@custom-selector :--on-element-states :hover, :focus, .focus;
+@custom-selector :--active-element-states :active, .active;
+
+@define-mixin btn-base {
+  display: inline-block;
+  padding: .375rem 1rem;
+  border: 1px solid rgba(0, 0, 0, .1);
+  border-radius: calc(@font-size * .25);
+  background: var(--default-background-color);
+  color: var(--default-font-color);
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color .2s ease-out,
+    box-shadow .2s ease-out,
+    color .2s ease-out;
+  vertical-align: middle;
+  user-select: none;
+
+  &:--element-states {
+    text-decoration: none;
+  }
+  &:--on-element-states {
+    background-color: color(white blackness(20%));
+    box-shadow: 1px 1px 3px lightgray;
+  }
+  &:--active-element-states {
+    background-color: color(white blackness(30%));
+  }
+}
+
+/* button-outline */
+@define-mixin btn-outline {
+  background-color: transparent;
+  box-shadow: 0 0 0 2px @color inset;
+  color: var(--$(state)-color);
+}
+
+/* button-filled */
+@define-mixin btn-filled {
+  background-color: var(--$(state)-color);
+  color: white;
+}
+
+/* button-grey */
+@define-mixin btn-grey {
+  background-color: color(var(--$(state)-color) blackness(30%));
+  box-shadow: 0 0 1rem rgba(34, 36, 38, .15) inset;
+}
+
+/* button-darked */
+@define-mixin btn-darked {
+  background-color: color(var(--$(state)-color) blackness(50%));
+}
+
+.btn {
+  @mixin btn-base;
+
+  &.inverted {
+    background: #4f5356;
+
+    &:--on-element-states {
+      background-color: #3f4144;
+    }
+  }
+
+  @each $state in (primary, secondary, success, warning, info, error) {
+    &.$state {
+      @mixin btn-filled;
+      border-color: transparent;
+
+      &:--on-element-states {
+        @mixin btn-grey;
+      }
+      &:--active-element-states {
+        @mixin btn-darked;
+      }
+
+      &.inverted {
+        @mixin btn-outline;
+
+        &:--on-element-states {
+          @mixin btn-filled;
+          box-shadow:
+            0 0 0 2px var(--$(state)-color) inset,
+            1px 1px 3px lightgray;
+        }
+        &:--active-element-states {
+          @mixin btn-grey;
+        }
+      }
+    }
+  }
+
+  &.confirm {
+    @extend .btn.success;
+  }
+
+  &.discrad {
+    @extend .btn.error;
+  }
+
+  &.secondary {
+    &:--on-element-states,
+    &:--active-element-states
+    &.inverted:--active-element-states {
+      background-color: #3f4144;
+    }
+  }
+}

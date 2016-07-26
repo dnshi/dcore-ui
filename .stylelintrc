@@ -1,0 +1,7 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "function-whitespace-after": null,
+    "number-leading-zero": "never"
+  }
+}
